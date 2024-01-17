@@ -1,0 +1,109 @@
+\chapter{Introduction and Probability Basics}
+\textbf{Probability}, a mathematical method of thinking about uncertainty (which is everything in real life).
+However, the quantification of uncertainty comes with some difficulty, and this course serves to teach it.
+
+\section{Introduction to Probability Space}
+Probability serves to quantify and model uncertainties. While it makes concrete the chances of some event occurring, it builds a model to represent a world where events are uncertain (which is precisely ours).
+The modern probability theory has an axiomatic starting point; they can be listed as follows:
+
+\begin{ln-define}{Probability Space}{}
+    A probability space $(\Omega, \mathcal{F}, \P)$ is a triple of:
+    \[
+        \begin{cases}
+            \Omega: &\text{ Sample Space} \\
+            \mathcal{F}: &\text{ Family of subsets of $\Omega$, called events} \\
+            \P: &\text{ Probability Measure}
+        \end{cases}
+    \]
+\end{ln-define}
+
+Among which, $\mathcal{F}$ is known as a $\sigma$-algebra that contains $\Omega$ itself. \\
+\begin{ln-define}{$\sigma$-Algebra}{}
+    The term $\sigma$-algebra states that $\mathcal{F}$ is closed under complements and countable unions:
+    \begin{align*}
+        A \in \mathcal{F} &\implies A^C \in \mathcal{F} \\
+        \forall i \in \{1, \dots, m\}, A_i \in \mathcal{F} &\implies \cup_{i}^{} A_i \in \mathcal{F}
+    \end{align*}
+    By DeMorgan's Law, $\mathcal{F}$ is also closed under countable intersections:
+    \[\forall i \in \{1, \dots, m\}, A_i \in \mathcal{F} \implies \cap_{i}^{} A_i \in \mathcal{F}\]
+    \textbf{The implication is that intersections and unions of events are still events.}
+\end{ln-define}
+Meanwhile, $\P$ is a function
+\[\P : \mathcal{F} \rightarrow [0, 1]\]
+And follows the Kolmogorov Axioms:
+\begin{ln-axiom}{Kolmogorov Axioms}{}
+    The axioms are:
+    \begin{bindenum}
+        \item[A1] $\forall A \in \mathcal{F}, \P(A) \geq 0$
+        \item[A2] $\P(\Omega) = 1$
+        \item[A3] $\sigma$-Additivity: if $A_1, \dots, A_n \in \mathcal{F}$ and are disjoint, then $\P(\cup_{i}^{} A_i) = \sum_{i \geq 1}\P(A_i)$.
+    \end{bindenum}
+    A counterexample of third axiom would be $\P = \text{Uniform}[0, 1]$, where the probability of any value occurring is essentially $0$, so will the probability of the entire sample space $[0, 1]$, yet such value should be $1$.
+\end{ln-axiom}
+
+Let us explore this concept via a demonstration:
+\begin{ln-explain}{Coinflip Interpreted as a Probability Space}{}
+    The sample space would be the possible occurrences: $\{H, T\}$. \\
+    The $\sigma$-algebra ($\mathcal{F}$) would be $2^\Omega = \wp(\Omega)$. \\
+    And, the probability of these events can be marked as:
+    \[\P(H) = p, \P(T) = 1 - p, \P(\emptyset) = 0, \P({H, T}) = 1\]
+
+    And expanding from these idea, for the probability space of $n$ independent flips,
+    \[
+        \begin{cases}
+            \Omega = {\{H, T\}}^n \\
+            \mathcal{F} = 2^\Omega \\
+            \P(f_1 f_2 \dots f_n) = p^{|\{i:f_i = H\}|} {(1 - p)}^{|\{i:f_i = T\}|}
+        \end{cases}
+    \]
+
+    However, we may also interpret with a diferrent sample space. Let,
+    \[
+        \begin{cases}
+            \Omega = \text{set of all configurations of atoms} \\
+            A = \text{set of all configurations that land to flip $H$} \\
+            B = \text{set of all configurations that land to flip $T$}
+        \end{cases}
+    \]
+    granting a different sigma algebra, but a numerically equivalent resulting probability function.
+\end{ln-explain}
+
+\subsection{The Consequences of Axiomatic Startpoints}
+\begin{ln-theorem}{Complement Probability}{}
+    \textbf{Theorem}: $A \in \mathcal{F} \rightarrow \P(A^C) = 1 - \P(A)$. \\
+    \tcblower
+    \textbf{Proof}: Because $\mathcal{F}$ is a $\sigma$-algebra, $A \in \mathcal{F} \implies A^C \in \mathcal{F}$.
+    We acknowledge that $\Omega = A \sqcup A^C$. \\
+    Then,
+    \[1 \underset{A2}{=} \P(\Omega) = \P(A \sqcup A^C) \underset{A3}{=} \P(A) + \P(A^C)\]
+\end{ln-theorem}
+\begin{ln-theorem}{Probability of Smaller Event Space}{}
+    \textbf{Theorem}: $A, B \in \mathcal{F} \implies \P(A) \leq \P(B)$. \\
+    \tcblower
+    \textbf{Proof}: Recognizing that $B = A \sqcup (B \backslash A)$, we may conclude that:
+    \[\P(B) = \P(A \sqcup (B \backslash A)) \underset{A3}{=} \P(A) + \P(B \backslash A) \underset{A1}{\geq} \P(A)\]
+\end{ln-theorem}
+\begin{ln-theorem}{Principle of Inclusion-Exclusion}{}
+    \textbf{Theorem}: $\P(A \cup B) = \P(A) + \P(B) - \P(A \cap B)$. \\
+    \tcblower
+    \textbf{Proof}: We may use a Venn Diagram to decompose for this probability and find the exact result.
+    Essentially, the ongoing subtractions and additions are to subtract overcounted regions on the venn diagram and add back the oversubtracted regions. \\
+    Or, mathematically:
+    \[A \cup B = B \sqcup (A \backslash B)\]
+    \[\P(A \cup B) \underset{A3}{=} \P(B) + \P(A \backslash (A \cap B)) \underset{A3}{=} \P(B) + \P(A) - \P(A \cap B)\]
+\end{ln-theorem}
+\begin{ln-theorem}{A Discrete Probability Space}{}
+    \textbf{Discrete Probability Space}: For some countable $\Omega$, $\mathcal{F} = 2^\Omega$, where all $\omega \in \Omega$ are events.
+    In that case, $\sum_{\omega \in \Omega} \P(\omega) = 1$ (this is otherwise known as the description of a discrete probability space).
+\end{ln-theorem}
+\begin{ln-theorem}{The Law of Total Probability}{}
+    \textbf{Theorem}: If $A_1, \dots \in \mathcal{F}$ partition $\Omega$ (such that $\Omega = \underset{i \geq 1}{\sqcup} A_i)$, then
+    \[\forall B \in \mathcal{F}, \P(B) = \sum_{i \geq 1} \P(B \cap A_i)\]
+    which can be supported by or support that:
+    \[B = \underset{i \geq 1}{\sqcup} (B \cap A_i)\]
+\end{ln-theorem}
+
+\section{Rest of the Lecture}
+From a mathematician's perspective (or probabilist's), probability spaces are abstract objects where given its triplet components $(\Omega, \mathcal{F}, \P)$, we attempt to perform and inquire about experiments. \\
+Meanwhile, a statistician asks how to choose a good model, not how a model works. \\
+And last but not least, an engineering scientist wonders how do we select a model that captures the essence of a real-world problem, and how can it draw insights to make quantitative guarnatees and how to control a system effectively.

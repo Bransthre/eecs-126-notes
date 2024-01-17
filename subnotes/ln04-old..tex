@@ -1,0 +1,315 @@
+\chapter{More on Discrete Probability}
+
+\section{Reviewing Random Variables}
+Random Variables are generally defined to be functions such that
+\[
+    X : \Omega \rightarrow \R
+\]
+that can be described by its ditributions, where the distribution is essentially some probability mass function. \\
+And, expectation is the weighted average of random variable's outcome where the weight is the probability mass function's output on corresponding input. Fortunately, expectation is linear; as in, it is a linear operator of random variables:
+\begin{ln-explain}{Linearity of Expectation}{}
+    \textbf{Property.} For random variables $X, Y$,
+    \[
+        \E[aX + bY] = a\E[X] + b\E[Y]
+    \]
+    \tcblower
+    \textbf{Example.} Say we are provided some sample space:
+    \[\Omega ={\{0, 1\}}^n, \P(\omega) = p^{\#\{i: \omega_i = 1\}} {(1 - p)}^{\#\{i: \omega_i = -1\}}\]
+    Such that the random variable $X = \#\{i: \omega_i = 1\}$ may be considered,
+    \[X \sim Binomial(n, p)\]
+    Where, let us define individual terms:
+    \[
+        X_i = 
+        \begin{cases}
+            0, &\text{The $i^{th}$ through is tails} \\
+            1, &\text{otherwise}
+        \end{cases}
+    \]
+    Such that,
+    \[
+        X = \sum_{i = 1}^n X_i
+    \]
+    And consequentially,
+    \begin{align*}
+        \E[X]
+        &= \E[\sum_{i = 1}^n X_i] \\
+        &= \sum_{i = 1}^n \E[X_i] = np
+    \end{align*}
+\end{ln-explain}
+From the above example, we may extract a general strategy of computing expectations:
+\begin{quote}
+    Decompose a random variable into independent indicator variables, and express the random variable as a linear combination of the indicators, such that the linearity of expectation facilitates the computation of
+    \[\E[X] = \E[X_1 + \cdots + X_n] = \E[X_1] + \cdots + \E[X_n]\]
+\end{quote}
+In general, we may also define indicator variables as:
+\begin{ln-symbol}{Indicator Variable}{}
+    For $A \in \mathcal{F}$, the indicator of $A$ is:
+    \[
+        \mathbbm{1}_A = 
+        \begin{cases}
+            1, &\text{if $\omega \in A$} \\
+            0, &\text{otherwise}
+        \end{cases}
+    \]
+\end{ln-symbol}
+
+Now, let us view another probability question:
+\begin{ln-explain}{Example of Indicator Strategy: Coin Flip}{}
+    \textbf{Question.} Let $n$ people put their hats in a bucket, and ecah then draw $1$ hat. \\
+    Let $X$ be a random variable presenting the number of people who get their own hat back. \\
+    Compute $\E[X]$.
+    \tcblower
+    \textbf{Solution.} Let $X_i$ be an indicator that person $i$ gets their own hat back. Then,
+    \begin{align*}
+        \E[X]
+        &= \sum_{i = 1}^n \E[X_i] \\
+        &= \sum_{i = 1}^n \frac{1}{n} = 1
+    \end{align*}
+    We have solved the problem without computing or creating any PMFs!
+\end{ln-explain}
+And what other greater application can this strategy can be made on other than probabilistic problems (more specifically, gambling)!? \\
+Let us look at the ``Coupon Collector Problem'':
+\begin{ln-explain}{Example of Indicator Strategy: Coupon Collector Problem (Cited from my CS70 Notes)}{}
+    \textbf{Problem.}
+    \begin{quote}
+        Let us attempt to collect a set of $n$ different cards. \\
+        We can get one card by performing one summon, each of the $n$ cards equivalently likely to appear from that summon. \\
+        How many summons do we have to do until we have collected at least one copy of every card?
+    \end{quote}
+    \tcblower
+    \textbf{Solution.}
+    Let $S_n$ denote the number of summoning we need to perform to collect all $n$ cards, then the distribution of $S_n$ is difficult to compute directly. But, its expected value can be calculated via the gift of linearity. \\
+    Let $X_i$ be a random variable rerpesenting the number of boxes needed while trying to get the $i^{th}$ new card, starting immediately after the most recent new card's obtain. \\
+    Then,
+    \[S_n = X_1 + X_2 + \cdots + X_n\]
+    Therefore,
+    \[\E[S_n] = \E[X_1 + X_2 + \cdots + X_n] = \E[X_1] + \E[X_2] + \cdots + \E[X_n]\]
+
+    The expected value of $X_1$ would be $1$, since any first card is a new card. \\
+    Now, how about $X_i$? \\
+    Each time we perform a summoning, we will get an new card with probability $\frac{n - i}{n}$. We will continue performing summoning, which can be characterized as a coin flip of heads probability $p = \frac{n - i}{n}$ for simplicity. This makes $X_i$ the number of tosses until first head. \\
+    There, 
+    \[X_i \sim \text{Geometric}(\frac{n - (i - 1)}{n})\]
+    And consequentially,
+    \[\E[X_i] = \frac{n}{n - i}\]
+
+    Coming back to the original simplification of $\E[S_n]$, then:
+    \[
+        \E[S_n] = \sum_{i = 1}^n \frac{n}{n - (i - 1)} = n\sum_{i = 1}^n \frac{1}{i}
+    \]
+    This can be well approximated as
+    \[
+        n\sum_{i = 1}^n \frac{1}{i} \simeq n(\ln{n} + \gamma_E)
+    \]
+    Where $\gamma_E=0.5772\dots$ is known as Euler's constant.
+\end{ln-explain}
+And, let us present another strategy for computing expectation, known as the tail sum formula:
+\begin{ln-theorem}{Tail-Sum Formula}{}
+    For a non-negative integer-valued random variable $X$,
+    \[
+        \E[X] = \sum_{k = 1}^{\infty} \P[X \geq k]
+    \]
+\end{ln-theorem}
+And here is an example of its usage:
+\begin{ln-explain}{Example of Tail Sum Formula Usage}{}
+    \textbf{Problem.} Provided $X_1 \sim Geom(p)$, $X_2 \sim Geo(q)$, such that $M = \min\{X_1, X_2\}$, compute $\E[M]$.
+    \tcblower
+    \textbf{Solution. } We may acknowledge that,
+    \[
+        \P(M \geq k) = \P(X_1 \geq k) \P(X_2 \geq k)
+    \]
+    Using the tail sum formula,
+    \[
+        \E[M] = \sum_{k \geq 1} \P(X_1 \geq k) \P(X_2 \geq k) = \frac{1}{1 - (1 - p)(1 - q)}
+    \]
+\end{ln-explain}
+
+\section{Variance}
+Let us define this staitstic first,
+\begin{ln-define}{Variance}{}
+    Variance is the quantitative notion of variability of $X$ around its expectation (centroid):
+    \[
+        Var(X) = \E[{(X - \E[X])}^2]
+    \]
+    In fact, let us expand this formula into a more usable form:
+    \begin{align*}
+        Var(X)
+        &= \E[{(X - \E[X])}^2] \\
+        &= \E[X^2 - 2X\E[X] + {\E[X]}^2] \\
+        &= \E[X^2] - 2\E[X]\E[X] + {\E[X]}^2 = \E[X^2] - {\E[X]}^2
+    \end{align*}
+\end{ln-define}
+And unfortunately, there is no linearity in variance as in expectation:
+\[
+    Var(X + Y) \neq Var(X) + Var(Y)
+\]
+\begin{ln-define}{Covariance}{}
+    We may derive the expression $Var(X + Y)$ as follows:
+    \begin{align*}
+        Var(X + Y)
+        &= {\E[X + Y - \E[X] - \E[Y]]}^2 \\
+        &= Var(X) + Var(Y) + 2 \E[(X - \E[X])(Y - \E[Y])]
+    \end{align*}
+    Where we define the following quantity as:
+    \[
+        Cov(X, Y) = \E[(X - \E[X])(Y - \E[Y])]
+    \]
+    Such that the covariance measures the correlation between random variables $X$ and $Y$ (so you will hear relations like ``positive covariance'', meaning positive correlation). \\
+    So, as according to sense, independent pairs $(X, Y)$ have zero covariance, resembling the fact that they are uncorrelated. Note that the converse does not necessarily hold true.
+\end{ln-define}
+Along which, the correlation coefficient is defined as:
+\begin{ln-define}{Correlation Coefficient}{}
+    The correlation of random variables $X$ and $Y$ is denoted and defined as:
+    \[
+        \rho(X, Y) = \frac{Cov(X, Y)}{\sqrt{Var(X) Var(Y)}}
+    \]
+    And the denominator enables us to conclude that,
+    \[
+        \forall X, Y, |\rho(X, Y)| \leq 1
+    \]
+\end{ln-define}
+As for why the range of correlation coefficient is locked within $[-1, 1]$, we may prove via linear algebraic approaches:
+\begin{ln-explain}{The Range of $\rho(X, Y)$}{}
+    This is affected by the Cauchy-Schwartz Inequality:
+    \begin{ln-define}{Cauchy-Schwartz Inequality (from EECS 127)}{}
+        The inequality is phrased as:
+        \[
+            |\vec{x}^T \vec{y}| \leq {\lVert \vec{x} \rVert}_2 {\lVert \vec{y} \rVert}_2
+        \]
+        And using the property,
+        \[|\forall x \in \R, |\cos(x)| \leq 1\]
+        this inequality originates from the following algebraic work:
+        \begin{align*}
+            |\langle \vec{x}, \vec{y} \rangle| &= |\vec{x}^T \vec{y}| = |\vec{y}^T \vec{x}| \\
+            &= |{\lVert \vec{x} \rVert}_2 {\lVert \vec{y} \rVert}_2 \cos(\theta_{\vec{x}, \vec{y}})| \\
+            &\leq |{\lVert \vec{x} \rVert}_2 {\lVert \vec{y} \rVert}_2|
+        \end{align*}
+    \end{ln-define}
+    \begin{ln-define}{Cauchy-Schwartz Inequality (from EECS 126)}{}
+        \textbf{Theorem.}
+        \[
+            |\E[XY]| \leq {\E[X^2]}^{\frac{1}{2}} {\E[Y^2]}^{\frac{1}{2}}
+        \]
+        \tcblower
+        \textbf{Proof.} Very abbreviatedly,
+        \[
+            \E[X, Y]
+            = \sum_{x, y} {\P_{xy}(x, y)}^\frac{1}{2}x{\P_{xy}(x, y)}^\frac{1}{2}y
+            \leq {\sum_{x, y} x^2 \P_{xy}(x, y)}^\frac{1}{2} {\sum_{x, y} y^2 \P_{xy}(x, y)}^\frac{1}{2}
+        \]
+    \end{ln-define}
+\end{ln-explain}
+Now, let us look at how covariance affects the compuation of random variables that might be a linear combination of indicator variables:
+\begin{ln-explain}{The Variance of Binomial RV}{}
+    Let $X \sim Binomial(n, p)$, such that
+    \[
+        X = \sum_{i = 1}^n X_i, X_i \sim Bernoulli(p)
+    \]
+    and indicators are independent of each other
+    Then, covariance is not of problem here, and
+    \[
+        Var(\sum_{i = 1}^n X_i) = \sum_{i = 1}^n Var(X_i) = n \times p(1 - p)
+    \]
+\end{ln-explain}
+
+Are there other ways of measuring variability? Sure, we may use some statistic like:
+\[
+    \E[{|X|}^p], p \in \R
+\]
+But the value of $p$ would affect how sensitive our statistic is to the variability of random variable $X$.
+
+Now, another interesting measure of variability, or chaoticness, in some random variable is \textbf{entropy}:
+\begin{ln-define}{Entropy}{}
+    The entropy of a random variable $X$ is defined as:
+    \[
+        H(x) := \sum_{x \in \mathcal{X}} \P_X(x) \log{\frac{1}{\P_X(x)}}
+    \]
+\end{ln-define}
+
+\section{Poisson Variables (Modified from my CS70 Notes)}
+\begin{ln-define}{Poisson Distribution}{}
+    A random variable X for which:
+    \[\P[X = i] = \frac{\lambda^i}{i!} e^{-\lambda}, i \in \Z^+\]
+    is said to have the Poisson distribution with paramerter $\lambda$. \\
+    We may mathematically abbreviate such as:
+    \[X \sim Poisson(\lambda)\]
+\end{ln-define}
+This distrbution is used to estimate the number of times an event happens (notated by the random variable $X \sim Poisson(\lambda)$) assuming the average number of occurrence in some periodic unit is $\lambda$, where such parameter may be in any division of measurement unit (say clicks occuring per second, but also clicks occuring per minute).
+
+Therefore, while the objective of Poisson is very distinct, it is also a distribution to be carefully utilized along the contexts of a problem. Specifically, depending on the problem's description of length of period (10 seconds? 10 minutes?) on which we model the Poisson distribution, we might need to multiply some given average rate of occurrence with the length of period to obtain the parameter $\lambda$ (once again, stands for average number of occurrence).
+
+Essentially, then, $\lambda$ is the mean of some distribution! \textbf{We call such parameter the rate at which an event occurs.}
+
+Let us, once again, verify this distribution by testing whether it sums up to $1$:
+\begin{align*}
+    \sum_{i = 0}^\infty \frac{\lambda^i}{i!} e^{-\lambda}
+    &= e^{-\lambda} \sum_{i = 0}^\infty \frac{\lambda^i}{i!} \\
+    e^{x} &= 1 + x + \frac{x^2}{2!} + \cdots \\
+    e^{-\lambda} \sum_{i = 0}^\infty \frac{\lambda^i}{i!}
+    &= e^{-\lambda} e^{\lambda} = 1
+\end{align*}
+
+\subsection{Properties of Poisson RV}
+For both expectation and variance, we can discover a very elegant identity. \\
+\begin{ln-theorem}{Expectation of Poisson RV}{}
+    \begin{align*}
+        \E[X]
+        &= \sum_{i = 0}^\infty i \P[X = i] \\
+        &= \sum_{i = 0}^\infty i \frac{\lambda^i}{i!} e^{-\lambda} \\
+        &= e^{-\lambda} \sum_{i = 1}^\infty \frac{\lambda^i}{(i - 1)!} \\
+        &= e^{-\lambda} \lambda \sum_{i = 1}^\infty \frac{\lambda^{i - 1}}{(i - 1)!} \\
+        &= e^{-\lambda} \lambda e^{\lambda} = \lambda
+    \end{align*}
+\end{ln-theorem}
+And as for variance:
+\begin{ln-theorem}{Variance of Poisson RV}{}
+    \begin{align*}
+        \E[X(X - 1)]
+        &= \sum_{i = 0}^\infty i(i - 1) \P[X = i] \\
+        &= \sum_{i = 0}^\infty i(i - 1) \frac{\lambda^i}{i!} e^{-\lambda} \\
+        &= \lambda^2 e^{-\lambda} \sum_{i = 2}^\infty \frac{\lambda^{i - 2}}{(i - 2)!} \\
+        &= \lambda^2 e^{-\lambda} e^{\lambda} = \lambda^2 \\
+        Var(X) &= \E[X^2] - {(\E[X])}^2 \\
+        &= \E[X(X - 1)] + \E[X] - {(\E[X])}^2 \\
+        &= \lambda^2 + \lambda - \lambda^2 = \lambda
+    \end{align*}
+\end{ln-theorem}
+
+\begin{ln-theorem}{Superposition of Poisson Distribution}{}
+    \textbf{Theorem}: Let $X \sim Poisson(\lambda)$ and $Y \sim Poisson(\mu)$ \underline{be independent of each other}, then $X + Y \sim Poisson(\lambda + \mu)$.
+    \tcblower
+    \textbf{Proof}:
+    \begin{align*}
+        \P[X + Y = k]
+        &= \sum_{j = 0}^k \P[X = j, Y = k - j] \\
+        &= \sum_{j = 0}^k \P[X = j] \P[Y = k - j] \\
+        &= \sum_{j = 0}^k \frac{\lambda^j}{j!} e^{-\lambda} \frac{\mu^{k - j}}{(k - j)!} e^{-\mu} \\
+        &= e^{-(\lambda + \mu)} \sum_{j = 0}^k \frac{\lambda^j \mu^{k - j}}{j!(k - j)!} \\
+        &= e^{-(\lambda + \mu)} \frac{{(\lambda + \mu)}^k}{k!}
+    \end{align*}
+\end{ln-theorem}
+
+\subsection{Binomial Distribution and Poisson Distribution}
+You may have discovered that binomial distribution and poisson distributions are very similarly used: to estimate the number of times some event occur, provided some metric of occurrence frequency. \\
+In fact, this similarity reflects on a mathematical dimension as well to reflect how Poisson variables is a development from Binomial variables:
+\begin{ln-theorem}{Poisson as a Limit of Binomial}{}
+    \textbf{Theorem}: Let $X \sim Binomial(n, \frac{\lambda}{n})$ where $\lambda > 0$ is constant, then
+    \[\forall i \in \N, \lim_{n \rightarrow \infty}\P[X = i] = \frac{\lambda^i}{i!}e^{-\lambda}\]
+    \tcblower
+    \textbf{Proof}:
+    First, let's do some algebraic simplification.
+    \begin{align*}
+        \P[X = i]
+        &= \binom{n}{i} {\bigg( \frac{\lambda}{n} \bigg)}^i {\bigg( 1 - \frac{\lambda}{n} \bigg)}^{n - i} \\
+        &= \frac{\lambda^i}{i!} \cdot \frac{n!}{(n - i)! n^i} \cdot {\bigg( 1 - \frac{\lambda}{n} \bigg)}^{n} \cdot {\bigg( 1 - \frac{\lambda}{n} \bigg)}^{-i}
+    \end{align*}
+    Here,
+    \[\frac{n!}{(n - i)! n^i} = \frac{n (n - 1) (n - 2) \cdots (n - i + 1)}{n^i}\]
+    This value approaches $1$ as $n$ approaches $\infty$. \\
+    Meanwhile, from calculus, we may determine that:
+    \[\lim_{n \rightarrow \infty} {(1 - \frac{\lambda}{n})}^n = e^{-\lambda}\]
+    And last but not least, since $i$ is a fixed variable,
+    \[\lim_{n \rightarrow \infty} {(1 - \frac{\lambda}{n})}^{-i} = 1\]
+    Therefore, multiplying these limits together, we obtain that:
+    \[\lim_{n \rightarrow \infty} \P[X = i] = \frac{\lambda^i}{i!}e^{-\lambda}\]
+\end{ln-theorem}

@@ -1,0 +1,163 @@
+\chapter{Expectation and Discrete Distributions}
+Attendance Passcode: Teapot
+
+\section{Random Variable}
+For solidifying our understanding towards onward probability concepts, let us concretely define random variables:
+\begin{ln-define}{Random Variable}{}
+    A random variable $X$ is a function
+    \[ X: \Omega \rightarrow \R \]
+    where
+    \[\forall \alpha \in \R, \{\omega : X(\omega) \leq \alpha\} \in \mathcal{F}\]
+    (or, written in English, set of all sample points where the random variable is among some interval must be an event). \\
+    Along which, we may once again mathematically conclude that:
+    \[
+        \{w : X(w) < \beta\} = \bigcup_{n \geq 1} \{\omega : X(\omega) \leq \beta\} \in \mathcal{F}
+    \]
+\end{ln-define}
+Essentially, $\P(X \in B)$ exists for any $B \subset \R$ of interest, and the technical name for such $B$ is \textbf{Borel Sets}. \\
+Another consequence of such definition of random variables is that any mathematical expression of random variables are random variables (say addition, multiplication, exponentiation).
+
+Let us also concretely define distributions:
+\begin{ln-define}{Distribution}{}
+    For any random variable $X$ on probabiltiy space $(\Omega, \mathcal{F}, \P)$, we define its distribution (otherwise called ``law'') as:
+    \[
+        \mathcal{L}_x (B) := \P(X \in B), B \subset \R
+    \]
+    For example,
+    \[
+        \mathcal{L}_x (x) = \P(X = x)
+    \]
+\end{ln-define}
+In practice, we often describe a model for experimental outcomes in terms of distributions; hence, distributions are important probability objects in relevant communications. 
+Furthermore, one can always construct a probability space and some random variable $X$ that has such distribution.
+Provided some distribution $\mathcal{L}$ and probability space $(\R, B, \mathcal{L})$ and random variable $X(\omega) = \omega \in \Omega$, \textbf{we can describe random variables in terms of their distributions} and leave the probability space itself implicit. \\
+
+\subsection{Discrete Random Variables}
+\begin{ln-define}{Discrete Random Variable}{}
+    A discrete random variable is a random variable that takes countably many values, such as:
+    \begin{bindenum}
+        \item $X =$ coin flip of a $p$-biased coin.
+    \end{bindenum}
+\end{ln-define}
+In the case of any discrete random variable $X$, its distribution can be summarized by its probbaility mass function, 
+\[p_x(x) := \P\{X = x\} \equiv \P\{\omega : X(\omega) = x\}\]
+
+Now, let us first note some important classes of discrete random variables:
+\begin{center}
+    \begin{tabular}{l||l|l}
+        Type & Description & Distribution \\
+        \hline
+        Bernoulli & Measures the probability of binary event & 
+        $
+            \P (x) =
+            \begin{cases}
+                1 - p, &
+                x = 0 \\
+                p, &x = 1
+            \end{cases}
+        $ \\
+        Uniform & Each discrete value of the random variable has equal probability. & 
+        $
+            \P (n) = \frac{1}{n}
+        $ \\
+        Geometric & Number of times needed until a binary event reaches success & 
+        $
+            \P (n, p) = p {(1 - p)}^{n - 1}
+        $ \\
+        Binomial & Number of times a binary event reaches success among $n$ trials.& 
+        $ 
+            \P (n, k, p) = \binom{n}{k} p^k {(1 - p)}^{n - k}
+        $
+    \end{tabular}
+\end{center}
+
+Then, let us talk about multivariable distributions:
+\begin{ln-define}{Joint Distributions}{}
+    For a pair of discrete variables $X, Y$ defined on a common probability space $(\Omega, \mathcal{F}, \P)$. \\
+    The joint distribution of $X$, $Y$ can be summarized by a jointed probability mass function $p_{x,y}$ such that,
+    \begin{align*}
+        \P_{x,y}(x, y) = \P(X = x, Y = y)
+        &= \P\big( \{\omega : X(\omega) = x \land Y(\omega) = y\} \big) \\
+        &= \P(\{\omega : X(\omega) = x\} \land \{\omega : y(\omega) = y\})
+    \end{align*}
+\end{ln-define}
+\begin{ln-explain}{Example of Joint Distributions}{}
+    \textbf{Example.} Let us assume that there are two random variables:
+    \[
+        X_1 = 
+        \begin{cases}
+            0, &\text{Patient is negative} \\
+            1, &\text{Patient is positive}
+        \end{cases}
+    \]
+    \[
+        X_2 = 
+        \begin{cases}
+            0, &\text{Patient tests negative with probability $0.9$} \\
+            1, &\text{Patient tests negative with probability $0.1$}
+        \end{cases}
+    \]
+    and provided that the false positive rate of test is $5\%$, false negative rate of test is $1\%$ (both are conditional probabilities, respectively when the ). \\
+    The joint distribution $\P_{X_1 x_2}$ can be phrased as exactly the probability of getting any of the four possible results for the test:
+    \[TP, TN, FP, FN\]
+    Then, we may algebraically summarize that:
+    \begin{quote}
+        For some probability $p$ by which one patient is in fact negative, $p * 0.95 + (1 - p) * 0.01 = 0.9$.
+    \end{quote}
+    and compute $p$ along the algebra to complete the joint distribution. \\
+    \textbf{\textit{Note: False negative means that the patient is tested negative, but is in fact positive. This might have caused algebraic confusion during lecture.}}
+\end{ln-explain}
+Notably, we may also attain marginal distributions from joint distributions. Marginal distributions are expressed as:
+\[p_x(x) = \sum_{y \in Y} \P_{x,y}(x, y)\]
+using the Total Probability Rule. \\
+
+And last but not least, let us motivate the definition of independent variables from prior work:
+\begin{ln-define}{Independent Random Variables}{}
+    Discrete Random Variables $X,Y$ are independent if
+    \[\P_{xy}(x, y) = \P_x(x) \P_y(y)\]
+    The independence of variables can also be expressed as:
+    \begin{quote}
+        $\forall x, y, \{\omega : X(\omega) = x\}$ and $\{\omega : y(\omega) = y\}$ are independent events
+    \end{quote}
+\end{ln-define}
+
+\section{Expectation}
+Let us also concretely define expectation:
+\begin{ln-define}{Expectation}{}
+    For a discrete random variable $X$ on $(\Omega, \mathcal{F}, \P)$, we define its expectation as the following computed value:
+    \[
+        \E[X] = \sum_{x \in \mathcal{X}} x \P\{X = x\} = \sum_{x \in \mathcal{X}} x \P_x(x)
+    \]
+    \tcblower
+    \textbf{Example.} For some probability model,
+    \[
+        \Omega = {\{0, 1\}}^n, \P(\omega) = p^{\text{number of heads}}  {(1 - p)}^{\text{number of heads}}, \mathcal{F} = 2^{\Omega}
+    \]
+    Then, we may compute the expected number of coinflips ($X \sim Binomial(n, p)$) as follows:
+    \begin{align*}
+        \E[X]
+        &= \sum_{\omega} |\{i: \omega_i = 1\}| p^{|\{i: \omega_i = 1\}|} {(1 - p)}^{|\{i: \omega_i = 0\}|} \\
+        &= \sum_{k = 0}^n k \binom{n}{k} p^k {(1 - p)}^{n - k} \\
+        &= np
+    \end{align*}
+    \textit{(Or, we can decompose the random variable $X$ into several independent random variables to provide a simpler method of calculation)}
+\end{ln-define}
+Now, let us review the properties of expectation:
+\begin{ln-theorem}{Linearity of Expectation}{}
+    \textbf{Theorem.} For random variables $X, Y$ (which can be non-independent as well),
+    \[
+        \E[aX + bY] = a\E[X] + b\E[Y]
+    \]
+    \tcblower
+    \textbf{Proof.} \\
+    \textbf{\textit{Lemma.}} Law of Unconscious Statistician:
+    \[\E[g(z)] = \sum_{z \in \mathcal{Z}} g(z) \P_z(z)\]
+    Then, 
+    \begin{align*}
+        \E[aX + bY]
+        &\underset{LOTUS}{=} \sum_{x,y} (ax + by) \P_{xy}(x, y) \\
+        &= a \sum_{x,y} x \P_{xy}(x, y) + b \sum_{x,y} y \P_{xy}(x, y) \\
+        &\underset{\text{Law of Total Probability}}{=} a \sum x\P(x) + b \sum y\P(y) \\
+        &= a\E[X] + b\E[Y]
+    \end{align*}
+\end{ln-theorem}

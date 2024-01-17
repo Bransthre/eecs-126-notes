@@ -1,0 +1,185 @@
+\chapter{Introduction, Probability Spaces, Conditional Probability Theorem}
+
+\section*{Course Policies}
+As always, first lecture is mostly about course policies.
+\begin{bindenum}
+    \item Look over syllabus and course website \href{https://inst.eecs.berkeley.edu/~ee126/sp24/}{here}
+    \item Check Ed and Gradescope
+    \item Industrial revolution of generative AI :0
+\end{bindenum}
+Textbook doesn't cover all lecture contents.
+
+\section*{Concept of Probability}
+The concept of probability theory began with the concept of frequency, where, a specific outcome occurs at a certain frequency that denotes the probability of that outcome in some sequence of experiments.
+For many applications, this stays true.
+However, in other applications where the notion of frequency does not apply (eg., if a presidential candidate wins at a probability of $50\%$, does that candidate win on the frequency of $0.5$ as well?).
+Consequently, we find a different mathematical formalism to illustrate the notion of probability.
+And, with the diversity of interpretations, many frameworks exist for the study of probability.
+In this course, via exploring numerous examples at which probability theories are applied and investigated, we develop our intuition toward the content of probability theory.
+
+\section{Set Operation}
+\subsection{Definition of Sets}
+Let us begin with the definition of sets.
+\begin{ln-define}{Set}{}
+    A \textbf{set} is a collection of objects. The objects contained in a set is called the \textbf{element} of that set.
+\end{ln-define}
+Sets are usually denoted using capital letters; for example, $\mathcal{A}$.
+
+\subsection{Element-wise Operations}
+Suppose that an element $x$ belongs to a set $\mathcal{X}$, we denote it as follows:
+\begin{ln-symbol}{Invlusion}{}
+    The expression:
+    \[
+        x \in \mathcal{X}
+    \]
+    denotes that the element $x$ belongs to a set $\mathcal{X}$.
+
+    Meanwhile, the expression:
+    \[
+        x \not \in \mathcal{X}
+    \]
+    denotes that the elemnt $x$ does not belong to $\mathcal{X}$.
+\end{ln-symbol}
+
+Usually, sets are written in the following format:
+\[
+    \mathcal{X} = \{x_1, x_2, \dots, x_n\}
+\]
+In the case where the set contains infinite elements, we may denote as follows:
+\[
+    \mathcal{X} = \{x_1, x_2, \dots\}
+\]
+
+To build a set conditionally, we may use a set-builder notation:
+\begin{ln-symbol}{Set-Builder Notation}{}
+    \[
+        \{x | x \text{ satisfies predicate } p\}
+    \]
+    For example, the set of all integers that are divisible is denoted as:
+    \[
+        \{2k | k \in \mathbb{Z}\}
+    \]
+\end{ln-symbol}
+
+\subsection{Set-Set Relations}
+Sets can be affiliated with each other:
+\begin{ln-define}{Subsets}{}
+    If every element of some set $\mathcal{X}$ is also an element of set $\mathcal{Y}$, we state that $\mathcal{X}$ is a subset of $\mathcal{Y}$:
+    \[
+        \mathcal{X} \subseteq \mathcal{Y}
+    \]
+\end{ln-define}
+\begin{ln-define}{Equality of Sets}{}
+    Sets $\mathcal{X}$ and $\mathcal{Y}$ are equal if $\mathcal{X} \subseteq \mathcal{Y} \land \mathcal{Y} \subseteq \mathcal{X}$.
+\end{ln-define}
+
+Last but not least, let us discuss the notion of universality in set theory:
+\begin{ln-define}{Universal Set}{}
+    A universal set $\Omega$ is the set of all elements that will be related to the application of discussion in mathematics.
+\end{ln-define}
+On the other hand, empty sets $\null$ denotes an empty set with no elements. By definition, the empty set is a subset of every set.
+
+Sets can also be related to each other based on their elemental differences.
+\begin{ln-define}{Complements}{}
+    The complement of a set $\mathcal{X}$ is defined as follows:
+    \[
+        \mathcal{X}^C = \{x | x \in \omega \land x \not \in \mathcal{X} \}
+    \]
+\end{ln-define}
+On the other hand, the notations ``union'' and ``intersection'' are defined as taught before.
+\begin{align*}
+    \mathcal{X} \cup \mathcal{Y} &= \{x | x \in \mathcal{X} \lor x \in \mathcal{Y}\} &&\text{(Union)}\\
+    \mathcal{X} \cap \mathcal{Y} &= \{x | x \in \mathcal{X} \land x \in \mathcal{Y}\} &&\text{(Intersection)}
+\end{align*}
+By definition, then,
+\begin{align*}
+    {(S^C)}^C = S \\
+    S \cup \Omega = \Omega
+\end{align*}
+
+\subsection{Algebraic Rules of Set Arithmetics}
+There exists commutativeness in the algebra of sets:
+\[
+    \forall S, T: S \cup T = T \cup S
+\]
+There also exists associativeness in the algebra of sets:
+\[
+    \forall S, T, M: S \cap (T \cup M) = (S \cap T) \cup (S \cap M)
+\]
+And, there's the famous DeMorgan's Law:
+\begin{align*}
+    {\big( \bigcup_n S_n \big)}^C &= \bigcap_n S_n^C \\
+    {\big( \bigcap_n S_n \big)}^C &= \bigcup_n S_n^C
+\end{align*}
+
+\section{Probabilistic Model}
+There are two components to a probabilistic model:
+\begin{enumerate}
+    \item A sample space $\Omega$ that refers to the set of all possible outcomes of an experiment.
+    \item A probability law that assigns nonegative number $\mathbb{P}(A)$ to each subset $A \subseteq \Omega$ that satisfies Kolmogorov's axioms.
+\end{enumerate}
+Let us proceed with a probabilistic model of dice rolls:
+\begin{ln-example}{Probabilistic Model of Dice Rolls}{}
+    The sample space of a dice roll may be:
+    \[
+        \Omega = \{1, 2, \dots, 6\}
+    \]
+    where the probability law for a fair dice works to be, for example,
+    \[
+        \mathbb{P}(\{1\}) = \frac{1}{6}
+    \]
+\end{ln-example}
+
+All probabilistic models follow the following Kolmogorov's axioms:
+\begin{ln-theorem}{Kolmogorov's Axioms}{}
+    \begin{enumerate}
+        \item $\mathbb{P}(A) \geq 0$
+        \item Countable-Additivity: If $A$ and $B$ are disjoint events, then $\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B)$.
+        \item $\mathbb{P}(\Omega) = 1$
+    \end{enumerate}
+    Among which, we may expand countable-additivity into the following condition:
+    \begin{quote}
+        For a sequence of disjoint, countably infinite events $A_1, A_2, \dots$,
+        \[
+            \mathbb{P} (\bigcup_{i=1}^n A_i) = \sum_{i=1}^n \mathbb{P}(A_i)
+        \]
+    \end{quote}
+\end{ln-theorem}
+
+With these axioms in mind, let us consider an alterantive example regarding probabilistic model of dices:
+\begin{ln-example}{Probabilistic Model of Pairs of Dice Rolls}{}
+    Let all possible results from one single four-sided dice rolls be represented by:
+    \[
+        \omega = \{1, 2, 3, 4\}
+    \]
+    The sample space of a pair of four-sided dice rolls may be represented as:
+    \[
+        \Omega = \{ (i, j) | i \in \omega \land j \in \omega\}
+    \]
+    Notably, this discrete sample space entertains a uniform probability for all possible outcome. In such case, the discrete uniform probbaility law states that, for some event $A$:
+    \[
+        \mathbb{P}(A) = \frac{|A|}{|\Omega|}
+    \]
+\end{ln-example}
+
+We further derive the following proerties of probability laws as the consequence of Kolmogorov's Axioms:
+\begin{enumerate}
+    \item $A \subseteq B \implies \mathbb{P}(A) \leq \mathbb{P}(B)$
+    \item $\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B)$
+    \item As implied from the previous rule: $\mathbb{P}(A) + \mathbb{P}(B) \geq \mathbb{P}(A \cap B)$
+    \item $\mathbb{P}(A \cup B \cup C) = \mathbb{P}(A) + \mathbb{P}(A^C \cap B) + \mathbb{P}(A^C \cap B^C \cap C)$
+\end{enumerate}
+
+\section{Conditional Probability}
+Conditioning is the essence of many probabilistic applications, and primary method of constructing complicated probabilistic measures.
+\begin{ln-define}{Conditional Probability}{}
+    The probability of an event $A$ provided the transpiration of event $B$ is denoted as:
+    \[
+        \mathbb{P}(A | B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}
+    \]
+    We may observe that if the event $A$ is not independent from event $B$, then the probability we discuss now is fundamentally different from the sole probability of event $A$'s occurrence.
+    \tcblower
+    For demonstration, let us state that $A$ is the event where a fair dice throw presents value $3$, and $B$ is where an even value is presented. Then, the event $A$ is dependent upon $B$ such that, with the occurrence of $B$, event $A$ shall enver occur.
+    Therefore, $\mathbb{P}(A | B) = 0$. \\
+    On the other hand, let $C$ be the event where value $4$ is presented, then $\mathbb{P}(A|B) = \frac{1}{3}$.
+\end{ln-define}
