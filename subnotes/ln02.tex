@@ -1,0 +1,136 @@
+\chapter{Law of Total Probability, Bayes' Rule, Independence}
+
+\section{Partial Information}
+Partial information is the circumstance at which we determine the probability of an event provided the occurrence of another event.
+Recall from last lecture this example:
+\begin{ln-define}{Conditional Probability}{}
+    The probability of an event $A$ provided the transpiration of event $B$ is denoted as:
+    \[
+        \mathbb{P}(A | B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}
+    \]
+    We may observe that if the event $A$ is not independent from event $B$, then the probability we discuss now is fundamentally different from the sole probability of event $A$'s occurrence.
+    \tcblower
+    For demonstration, let us state that $A$ is the event where a fair dice throw presents value $3$, and $B$ is where an even value is presented. Then, the event $A$ is dependent upon $B$ such that, with the occurrence of $B$, event $A$ shall enver occur.
+    Therefore, $\mathbb{P}(A | B) = 0$. \\
+    On the other hand, let $C$ be the event where value $4$ is presented, then $\mathbb{P}(A|B) = \frac{1}{3}$.
+\end{ln-define}
+In addition, provided the above example where we entertain a uniform discrete probability space, we find that,
+\[
+    \mathbb{P}(A | B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} = \frac{|A \cap B|}{|B|}
+\]
+
+We may further formulate the probability laws of a conditional probability circumstance:
+\begin{ln-theorem}{Conditional Probability Rules}{}
+    The following three rules dictate the mechanisms of conditional probability:
+    \begin{enumerate}
+        \item $\forall A \in \Omega, \mathbb{P} (A | B) \geq 0$
+        \item Provided two disjoint events $A_1$, $A_2$: \[\mathbb{P}(A_1 \cup A_2 | B) = \mathbb{P}(A_1 | B) + \mathbb{P}(A_2 | B) \]
+        \item $\forall B \in \Omega, \mathbb{P}(\Omega | B) = 1$
+    \end{enumerate}
+    \tcblower
+    The derivation for rule 2 follows:
+    \begin{align*}
+        \mathbb{P}(A_1 \cup A_2 | B)
+        &= \frac{\mathbb{P}((A_1 \cup A_2) \cap B)}{\mathbb{P}(B)} \\
+        &= \frac{\mathbb{P}((A_1 \cap B) \cup (A_2 \cap B))}{\mathbb{P}(B)} \\
+        &= \frac{\mathbb{P}((A_1 \cap B)) + \mathbb{P}((A_2 \cap B))}{\mathbb{P}(B)}
+        = \mathbb{P}(A_1 | B) + \mathbb{P}(A_2 | B)
+    \end{align*}
+    The derivation for rule 3 follows:
+    \begin{align*}
+        \mathbb{P}(\Omega | B)
+        &= \frac{\mathbb{P}(\Omega \cap B)}{\mathbb{P}(B)} \\
+        &= \frac{\mathbb{P}(B)}{\mathbb{P}(B)} = 1
+    \end{align*}
+\end{ln-theorem}
+
+Meanwhile, from the formualtion of conditional probability, we also develop the Multiplication Rule:
+\begin{ln-theorem}{Multiplication Rule}{}
+    The multiplication rule states that:
+    \begin{align*}
+        \mathbb{P}(\bigcap_{i \geq 1} A_i)
+        &= \mathbb{P}(A_1) \prod_{i \geq 1} \mathbb{P}(A_{i + 1} | \cap_{j = 1}^i A_{j}) \\
+        &= \mathbb{P}(A_1) \prod_{i \geq 1} \frac{\mathbb{P}(\cap_{k = 1}^{i+1} A_k)}{\mathbb{P}(\cap_{j = 1}^{i} A_j)}
+    \end{align*}
+\end{ln-theorem}
+
+\section{Total Probability and Bayes' Rule}
+Let us begin our discussion with the Total Probability Theorem, used for handling an approach of divide and conquer computation for probabilities:
+\begin{ln-theorem}{Total Probbaility Theorem}{}
+    Let us have disjoint events $A_1, A_2, \dots, A_m$ that form a partition of the sample space $\Omega$.
+    Assume that $\forall i \in \{1, \ldots, m\}: \mathbb{P}(A_i) \geq 0$.
+    Then, the Total Probability Theorem states that, for any event $B \in \Omega$:
+    \begin{align*}
+        \mathbb{P}(B)
+        &= \sum_{i = 1}^m \mathbb{P}(A_i \cap B) \\
+        &= \sum_{i = 1}^m \mathbb{P}(A_i) \mathbb{P}(B | A_i)
+    \end{align*}
+\end{ln-theorem}
+
+And, let us also introduce the famous probability rule:
+\begin{ln-theorem}{Bayes' Rule}{}
+    The most primitive form of this theorem follows as
+    \[
+        \mathbb{P}(A|B) = \frac{\mathbb{P}(A) \mathbb{P}(B|A)}{\mathbb{P}(B)}
+    \]
+    while the form of this theorem under intervention of Total Probability Theorem is phrased as:
+    \[
+        \mathbb{P}(A|B) = \frac{\mathbb{P}(A) \mathbb{P}(B|A)}{\sum_{i = 1}^m \mathbb{P}(A_i) \mathbb{P}(B | A_i)}
+    \]
+\end{ln-theorem}
+
+\section{Independence}
+The concept may be illustrated by the following context:
+\begin{quote}
+    For two same experiments held across different laboratories, the result in lab A should not influence the result in lab B: they are independent, without influence of each other.
+\end{quote}
+In probability theory, there is a simple definition for independence of events:
+\begin{ln-define}{Independence}{}
+    Two events $A$, $B$ are independent if \[mathbb{P}(A|B) = \mathbb{P}(A)\]
+\end{ln-define}
+There is a rigorous definition for independence that we will discuss later, which concerns the independence of sigma algebras isntead of independence of events.
+
+What does independence contribute to probability theory? Or, what are some interesting properties of independence?
+For one simple instance, consider our prior definition of conditional probability:
+\[
+    \mathbb{P}(A \cap B) = \mathbb{P}(B) \P(A | B)
+\]
+Such that at independence of events, \[\mathbb{P}(A \cap B) = \mathbb{P}(A) \mathbb{P}(B)\]
+This shows that, the probabilities of $A$ and $B$ do not affect each other, as the probability of joint occurrences $A \cap B$ and $B \cap A$ are equal.
+In such sense, we state that independence is \textbf{symmetric} for events $A$ and $B$.
+
+As the concept is more sophisticated, let us discuss independence further with an example
+\begin{ln-example}{Demonstration of Independence in Dice Throws}{}
+    Let us work with 2 rolls of a 4-sided die. Let events $A_i$ denote the result of the first rolls, events $B_i$ denote ther esult of second rolls.
+    The probability $\P(A_i \cap B_j)$ is the probability at which the first roll results in value $i$, and second roll $j$, and the probability is simply $\frac{1}{4} \times \frac{1}{4}$. \\
+    More precisely, \[\P(A_i \cap B_j) = \P(A_i) \P(B_j) = \frac{1}{16}\]
+
+    Now, let us work with a slightly different example:
+    \[
+        \begin{cases}
+            \text{Event A} &: \text{ The first roll of the dice is $1$} \\
+            \text{Event B} &: \text{ The sum of two rolls of the dice is $5$}
+        \end{cases}
+    \]
+    are the two events independent?
+    \tcblower
+    Let us inspect the probabilities $\P(A)$ and $\P(B)$:
+    \begin{align*}
+        \P(A) &= \frac{1}{4} \\
+        \P(B) &= \frac{4}{16} = \frac{1}{4} \\
+        \P(A \cap B) &= \frac{1}{4} \times \frac{1}{4} = \frac{1}{16}
+    \end{align*}
+    We arrive at the conclusion that
+    \[
+        \mathbb{P}(A \cap B) = \mathbb{P}(B) \P(A | B)
+    \]
+    Therefore, events $A$ and $B$ are independent, even if the intuitions would say event B and A ``\textit{might}'' be independent just because the sum of rolls involve the result of one roll.
+\end{ln-example}
+
+Now, let us discuss the independence of many events.
+\begin{ln-define}{Independence of Mant Events}{}
+    Events $A_1, \dots, A_m$ are independent if:
+    \[
+        \forall S \subseteq \{1, \ldots, m\}: \P(\bigcap_{i \in S} A_i) = \prod_{i \in S} \P(A_i)
+    \]
+\end{ln-define}
